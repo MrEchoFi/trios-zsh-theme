@@ -55,57 +55,88 @@ AllForOne
 
 ## Installation
 
-### One-liner
+## Installation
 
-```zsh
-git clone https://github.com/MrEchoFi/trios-zsh-theme \
-  ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/trios && \
-  sed -i 's/^ZSH_THEME=.*/ZSH_THEME="trios"/' ~/.zshrc && \
-  source ~/.zshrc
+### Step 1 — Install Oh My Zsh (skip if already installed)
+
+```bash
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 ```
 
-### Manual
+### Step 2 — Clone the repo
 
-```zsh
-# 1. Clone
-git clone https://github.com/tanjib/trios-zsh-theme \
-  ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/trios
+```bash
+git clone https://github.com/MrEchoFi/trios-zsh-theme.git \
+  ~/.oh-my-zsh/custom/themes/trios
+```
 
-# 2. Edit ~/.zshrc
+### Step 3 — Copy the theme file
+
+```bash
+cp ~/.oh-my-zsh/custom/themes/trios/trios.zsh-theme \
+   ~/.oh-my-zsh/custom/themes/
+```
+
+### Step 4 — Set the theme
+
+Open your `.zshrc`:
+
+```bash
+nano ~/.zshrc
+```
+
+Find the line `ZSH_THEME=` and change it to:
+
+```bash
 ZSH_THEME="trios"
+```
 
-# 3. Reload
+Save with **Ctrl+O → Enter → Ctrl+X**
+
+### Step 5 — Reload
+
+```bash
 source ~/.zshrc
 ```
 
+Your prompt should now look exactly like the preview above.
+
+---
 ---
 
 ## Customisation
 
 Add any of these to `~/.zshrc` **before** `source $ZSH/oh-my-zsh.sh`:
 
-```zsh
-# Change the hexagon symbol (e.g. plain ASCII)
-TRIOS_HEX="*"
+```bash
+# Hexagon symbol (default: ⬡)
+TRIOS_HEX="⬡"          # outline hexagon (default)
+TRIOS_HEX="⬢"          # filled hexagon
+TRIOS_HEX="*"          # plain ASCII fallback
 
-# Change colours (any zsh colour name or 256-code)
-TRIOS_COLOR_HEX="cyan"       # ⬡ bullets and path
-TRIOS_COLOR_USER="white"         # username
-TRIOS_COLOR_ARROW="white"        # >>_ arrow
-TRIOS_COLOR_CMD_OK="cyan"        # command echo on success
-TRIOS_COLOR_CMD_FAIL="red"       # command echo on error
+# Colours — use a name or a 256-colour code
+TRIOS_COLOR_HEX="39"        # ⬡ bullets and path  (default: electric blue)
+TRIOS_COLOR_USER="white"    # username            (default: white)
+TRIOS_COLOR_ARROW="white"   # >>_ arrow           (default: white)
+TRIOS_COLOR_CMD_OK="39"     # command echo on success (default: electric blue)
+TRIOS_COLOR_CMD_FAIL="red"  # command echo on error   (default: red)
 ```
 
-### 256-colour example (electric blue prompt)
+## Troubleshooting
 
-```zsh
-TRIOS_COLOR_HEX="39"
-TRIOS_COLOR_PATH="39"
-TRIOS_COLOR_CMD_OK="39"
+**`[oh-my-zsh] theme 'trios' not found`**
+
+The `.zsh-theme` file is not in the right place. Run Step 3 again:
+```bash
+cp ~/.oh-my-zsh/custom/themes/trios/trios.zsh-theme \
+   ~/.oh-my-zsh/custom/themes/
+```
+Then verify it exists:
+```bash
+ls ~/.oh-my-zsh/custom/themes/ | grep trios
 ```
 
 ---
-
 ## Terminal background
 
 The screenshot uses a dark background with a cyberpunk armour wallpaper.
