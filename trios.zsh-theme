@@ -1,6 +1,6 @@
 # ================================================================
 #  trios.zsh-theme
-#  Faithful recreation of the "trios" terminal design by tanjib
+#  Faithful recreation of the "trios" terminal design by MrEchoFi
 #
 #  Design spec (from screenshot):
 #    ⬡ username  ⬡ ~/path  >>_ cmd
@@ -22,7 +22,7 @@
 #    • preexec  : prints the command in cyan before it runs
 #    • precmd   : captures exit code; colours next echo accordingly
 #
-#  Author  : tanjib (https://github.com/tanjib)
+#  Author  : MrEchoFi_Md. Abu Naser Nayeem (https://github.com/MrEchoFi)
 #  Theme   : trios
 #  License : MIT
 # ================================================================
@@ -36,7 +36,7 @@ TRIOS_COLOR_CMD_OK="${TRIOS_COLOR_CMD_OK:-cyan}"   # echoed cmd — success
 TRIOS_COLOR_CMD_FAIL="${TRIOS_COLOR_CMD_FAIL:-red}" # echoed cmd — error
 TRIOS_COLOR_PATH="${TRIOS_COLOR_PATH:-cyan}"       # path segment
 
-# ── Symbol — U+2B21 WHITE HEXAGON (outline, matches screenshot) ──
+# ── Symbol — U+2B21 WHITE HEXAGON (outline) ──
 # Override: TRIOS_HEX="⬢"  for filled, or TRIOS_HEX="*" for ASCII
 TRIOS_HEX="${TRIOS_HEX:-⬡}"
 
@@ -50,9 +50,9 @@ _trios_cmd_text=""
 _trios_preexec() {
   _trios_cmd_text="$1"
   if [[ $_trios_last_exit -eq 0 ]]; then
-    print -rn -- "%F{${TRIOS_COLOR_CMD_OK}}${_trios_cmd_text}%f"$'\n'
+    print -Prn -- "%F{${TRIOS_COLOR_CMD_OK}}${_trios_cmd_text}%f"$'\n'
   else
-    print -rn -- "%F{${TRIOS_COLOR_CMD_FAIL}}${_trios_cmd_text}%f"$'\n'
+    print -Prn -- "%F{${TRIOS_COLOR_CMD_FAIL}}${_trios_cmd_text}%f"$'\n'
   fi
 }
 
