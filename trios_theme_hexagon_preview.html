@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trios ZSH Theme Preview</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --color-background: #070b12;
+      --color-surface: #0a0c10;
+      --color-background-secondary: #10131a;
+      --color-border-tertiary: #1f2733;
+      --color-text-primary: #e0e6f0;
+      --color-text-secondary: #8fa2bb;
+      --border-radius-md: 0.75rem;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      min-height: 100%;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: radial-gradient(circle at top left, rgba(0, 212, 212, 0.14), transparent 28%),
+                  radial-gradient(circle at bottom right, rgba(96, 165, 250, 0.12), transparent 22%),
+                  var(--color-background);
+      color: var(--color-text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), transparent 40%),
+                  radial-gradient(circle at 70% 15%, rgba(255,255,255,0.06), transparent 20%),
+                  radial-gradient(circle at 25% 80%, rgba(56,189,248,0.08), transparent 18%);
+      pointer-events: none;
+    }
+
+    .wrap {
+      position: relative;
+      width: min(100%, 920px);
+      padding: 1.5rem;
+      font-family: var(--font-mono);
+      perspective: 1200px;
+      z-index: 1;
+    }
+
+    .preview-label {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      color: var(--color-text-secondary);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .terminal {
+      background: var(--color-surface);
+      border-radius: 1rem;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.06);
+      max-width: 100%;
+      position: relative;
+      transform: translateZ(16px) rotateX(1.4deg);
+      transform-style: preserve-3d;
+      box-shadow: 0 24px 90px rgba(0, 0, 0, 0.22);
+    }
+
+    .titlebar {
+      background: #111418;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .dot-r { background: #ff5f57; }
+    .dot-y { background: #febc2e; }
+    .dot-g { background: #28c840; }
+
+    .tbar-title {
+      margin: 0 auto;
+      font-size: 12px;
+      color: #4a5568;
+      letter-spacing: 0.05em;
+    }
+
+    .tbody {
+      padding: 22px 26px 28px;
+      min-height: 320px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .bg-glow {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 10%;
+      background: radial-gradient(circle at top right, rgba(0,212,212,0.1), transparent 58%);
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.65;
+    }
+
+    .line {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      font-size: 14px;
+      line-height: 2;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 8px;
+      height: 15px;
+      background: #00d4d4;
+      animation: blink 1.1s step-end infinite;
+      vertical-align: -2px;
+      margin-left: 1px;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    .ls-out {
+      color: #d4d8e0;
+      font-size: 14px;
+      padding-left: 2px;
+      line-height: 1.75;
+    }
+
+    .err-msg {
+      color: #e0e6f0;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .panel {
+      margin-top: 1.5rem;
+      max-width: 100%;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .card {
+      background: var(--color-background-secondary);
+      border: 0.5px solid var(--color-border-tertiary);
+      border-radius: var(--border-radius-md);
+      padding: 18px 18px;
+      font-family: var(--font-sans);
+    }
+
+    .card h4 {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-text-primary);
+      margin-bottom: 12px;
+    }
+
+    .color-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .color-label {
+      font-size: 13px;
+      color: var(--color-text-secondary);
+    }
+
+    .swatch-btn {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .sw {
+      width: 20px;
+      height: 20px;
+      border-radius: 0.55rem;
+      border: 1.5px solid transparent;
+      cursor: pointer;
+      transition: border-color 0.15s ease;
+    }
+
+    .sw.active {
+      border-color: var(--color-text-primary) !important;
+    }
+
+    .zshrc-box {
+      margin-top: 1.5rem;
+      max-width: 100%;
+      background: var(--color-surface);
+      border-radius: 1rem;
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 18px 20px;
+      font-size: 13px;
+      line-height: 2;
+    }
+
+    .zshrc-comment { color: #4a7c59; }
+    .zshrc-var { color: #00d4d4; }
+    .zshrc-val { color: #e2b96a; }
+
+    .shape-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-size: 13px;
+    }
+
+    .shape-char {
+      font-size: 20px;
+      line-height: 1;
+      cursor: pointer;
+      padding: 5px 10px;
+      border-radius: 0.65rem;
+      border: 1.5px solid transparent;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .shape-char:hover {
+      background: rgba(255,255,255,0.04);
+    }
+
+    .shape-char.active { border-color: var(--color-text-primary); }
+    .shape-desc { color: var(--color-text-secondary); font-size: 12px; }
+
+    @media (max-width: 760px) {
+      .panel { grid-template-columns: 1fr; }
+      .terminal { transform: translateZ(12px) rotateX(0.8deg); }
+      .wrap { padding: 1rem; }
+    }
+
+    @media (max-width: 560px) {
+      body { padding: 1rem; }
+      .titlebar { padding: 10px 12px; }
+      .tbody { padding: 18px 16px 22px; }
+      .zshrc-box, .card { padding: 14px 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h2 class="sr-only">Trios ZSH Theme Preview</h2>
+
+    <p class="preview-label"> ⬡ hexagon shape </p>
+
+    <div class="terminal">
+      <div class="titlebar">
+        <div class="dot dot-r"></div>
+        <div class="dot dot-y"></div>
+        <div class="dot dot-g"></div>
+        <span class="tbar-title">trios — zsh</span>
+      </div>
+      <div class="bg-glow"></div>
+      <div class="tbody" id="tbody"></div>
+    </div>
+
+    <div class="panel">
+      <div class="card">
+        <h4>Hexagon variant</h4>
+        <div class="shape-row">
+          <span class="shape-char active" id="sh-outline" title="U+2B21 WHITE HEXAGON — matches screenshot">⬡</span>
+          <span class="shape-desc">U+2B21 — outline </span>
+        </div>
+        <div class="shape-row">
+          <span class="shape-char" id="sh-filled" title="U+2B22 BLACK HEXAGON — filled variant">⬢</span>
+          <span class="shape-desc">U+2B22 — filled variant</span>
+        </div>
+        <div style="margin-top:10px;">
+          <div class="color-row">
+            <span class="color-label">hexagon &amp; path colour</span>
+            <div class="swatch-btn" id="sw-hex">
+              <div class="sw active" style="background:#00d4d4" data-val="cyan"></div>
+              <div class="sw" style="background:#a78bfa" data-val="magenta"></div>
+              <div class="sw" style="background:#34d399" data-val="green"></div>
+              <div class="sw" style="background:#60a5fa" data-val="blue"></div>
+              <div class="sw" style="background:#f97316" data-val="orange"></div>
+            </div>
+          </div>
+          <div class="color-row">
+            <span class="color-label">echo — success</span>
+            <div class="swatch-btn" id="sw-ok">
+              <div class="sw active" style="background:#00d4d4" data-val="cyan"></div>
+              <div class="sw" style="background:#34d399" data-val="green"></div>
+              <div class="sw" style="background:#60a5fa" data-val="blue"></div>
+            </div>
+          </div>
+          <div class="color-row">
+            <span class="color-label">echo — error</span>
+            <div class="swatch-btn" id="sw-err">
+              <div class="sw active" style="background:#ff4444" data-val="red"></div>
+              <div class="sw" style="background:#f97316" data-val="orange"></div>
+              <div class="sw" style="background:#f472b6" data-val="pink"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4>Scenario</h4>
+        <div id="scenarios"></div>
+      </div>
+    </div>
+
+    <div class="zshrc-box">
+      <span class="zshrc-comment"># ~/.zshrc — paste before source $ZSH/oh-my-zsh.sh</span><br>
+      <span class="zshrc-var">ZSH_THEME</span>="<span style="color:#e2b96a">trios</span>"<br>
+      <span class="zshrc-var">TRIOS_HEX</span>="<span id="zrc-hex" style="color:#e2b96a">⬡</span>"<br>
+      <span class="zshrc-var">TRIOS_COLOR_HEX</span>="<span id="zrc-hc" style="color:#e2b96a">cyan</span>"<br>
+      <span class="zshrc-var">TRIOS_COLOR_CMD_OK</span>="<span id="zrc-ok" style="color:#e2b96a">cyan</span>"<br>
+      <span class="zshrc-var">TRIOS_COLOR_CMD_FAIL</span>="<span id="zrc-err" style="color:#e2b96a">red</span>"
+    </div>
+  </div>
+
+  <script>
+    const colorHex = {
+      cyan: '#00d4d4', green: '#34d399', blue: '#60a5fa',
+      magenta: '#a78bfa', red: '#ff4444', orange: '#f97316', pink: '#f472b6'
+    };
+
+    const state = { hex: '⬡', hexColor: '#00d4d4', ok: '#00d4d4', err: '#ff4444', scenario: 'normal' };
+
+    function promptLine(user, path, cmd) {
+      const h = state.hex;
+      const hc = state.hexColor;
+      return `<span style="color:${hc};font-size:15px">${h}</span>&nbsp;<span style="color:#e0e6f0;font-weight:700">${user}</span>&nbsp;&nbsp;<span style="color:${hc};font-size:15px">${h}</span>&nbsp;<span style="color:${hc}">&nbsp;${path}</span>&nbsp;<span style="color:#e0e6f0">&gt;&gt;_</span>&nbsp;<span style="color:#e0e6f0">${cmd}</span>`;
+    }
+
+    const scenarios = {
+      normal: { label: 'Your screenshot', lines: [
+        { t: 'p', u: 'username', p: '~/Documents/trios/trios_terminal', c: 'cd ..' },
+        { t: 'e', ok: true, s: 'cd ..' },
+        { t: 'p', u: 'username', p: '~/Documents/trios', c: 'cd ..' },
+        { t: 'e', ok: true, s: 'cd ..' },
+        { t: 'p', u: 'username', p: '~/Documents', c: 'cd..' },
+        { t: 'e', ok: false, s: 'cd..' },
+        { t: 'm', s: '/bin/bash: line 1: cd..: command not found' },
+        { t: 'p', u: 'username ', p: '~/Documents', c: 'cd ..' },
+        { t: 'e', ok: true, s: 'cd ..' },
+        { t: 'p', u: 'username', p: '~', c: 'ls' },
+        { t: 'e', ok: true, s: 'ls' },
+        { t: 'ls', files: ['10.48.141.132.gnmap', '10.48.141.132.nmap', '10.48.141.132.xml', 'AllForOne'] },
+        { t: 'cursor', u: 'username', p: '~' },
+      ] },
+      pentest: { label: 'HTB session', lines: [
+        { t: 'p', u: 'username', p: '~/recon', c: 'nmap -sV 10.48.141.132' },
+        { t: 'e', ok: true, s: 'nmap -sV 10.48.141.132' },
+        { t: 'ls', files: ['PORT   STATE  SERVICE', '22/tcp open   ssh', '80/tcp open   http', '443/tcp open  https'] },
+        { t: 'p', u: 'username', p: '~/recon', c: 'nc -lvnp 4444' },
+        { t: 'e', ok: true, s: 'nc -lvnp 4444' },
+        { t: 'm', s: 'Listening on 0.0.0.0 4444' },
+        { t: 'cursor', u: 'username', p: '~/recon' },
+      ] },
+      root: { label: 'Root shell', lines: [
+        { t: 'p', u: 'root', p: '/opt/exploits', c: 'python3 exploit.py' },
+        { t: 'e', ok: true, s: 'python3 exploit.py' },
+        { t: 'ls', files: ['[*] Sending payload...', '[+] Got shell!'] },
+        { t: 'p', u: 'root', p: '/opt/exploits', c: 'whoami' },
+        { t: 'e', ok: true, s: 'whoami' },
+        { t: 'ls', files: ['root'] },
+        { t: 'cursor', u: 'root', p: '/opt/exploits' },
+      ] },
+    };
+
+    function render() {
+      const sc = scenarios[state.scenario];
+      let html = '';
+      for (const l of sc.lines) {
+        if (l.t === 'p') html += `<div class="line">${promptLine(l.u, l.p, l.c)}</div>`;
+        else if (l.t === 'e') html += `<div style="color:${l.ok ? state.ok : state.err};font-size:14px;line-height:1.8">${l.s}</div>`;
+        else if (l.t === 'm') html += `<div class="err-msg">${l.s}</div>`;
+        else if (l.t === 'ls') l.files.forEach(f => { html += `<div class="ls-out">&nbsp;&nbsp;${f}</div>`; });
+        else if (l.t === 'cursor') html += `<div class="line">${promptLine(l.u, l.p, '')}<span class="cursor"></span></div>`;
+      }
+      document.getElementById('tbody').innerHTML = html;
+    }
+
+    function buildScenarios() {
+      const c = document.getElementById('scenarios');
+      c.innerHTML = Object.entries(scenarios).map(([k, v]) => `
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:6px;font-size:13px;color:var(--color-text-secondary)">
+          <input type="radio" name="sc" value="${k}" ${state.scenario === k ? 'checked' : ''} style="accent-color:#00d4d4">
+          ${v.label}
+        </label>`).join('');
+      c.querySelectorAll('input').forEach(r => r.addEventListener('change', () => { state.scenario = r.value; render(); }));
+    }
+
+    document.getElementById('sh-outline').addEventListener('click', () => {
+      state.hex = '⬡';
+      document.getElementById('zrc-hex').textContent = '⬡';
+      document.getElementById('sh-outline').classList.add('active');
+      document.getElementById('sh-filled').classList.remove('active');
+      render();
+    });
+
+    document.getElementById('sh-filled').addEventListener('click', () => {
+      state.hex = '⬢';
+      document.getElementById('zrc-hex').textContent = '⬢';
+      document.getElementById('sh-filled').classList.add('active');
+      document.getElementById('sh-outline').classList.remove('active');
+      render();
+    });
+
+    function bindSwatches(id, key, zrcId) {
+      document.getElementById(id).querySelectorAll('.sw').forEach(sw => {
+        sw.addEventListener('click', () => {
+          document.getElementById(id).querySelectorAll('.sw').forEach(s => s.classList.remove('active'));
+          sw.classList.add('active');
+          state[key] = colorHex[sw.dataset.val];
+          if (id === 'sw-hex') state.hexColor = colorHex[sw.dataset.val];
+          document.getElementById(zrcId).textContent = sw.dataset.val;
+          render();
+        });
+      });
+    }
+
+    bindSwatches('sw-hex', 'hexColor', 'zrc-hc');
+    bindSwatches('sw-ok', 'ok', 'zrc-ok');
+    bindSwatches('sw-err', 'err', 'zrc-err');
+    buildScenarios();
+    render();
+  </script>
+</body>
+</html>
