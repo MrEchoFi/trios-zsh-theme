@@ -1,4 +1,4 @@
-# trios — ZSH Theme
+# MrEchoFi __ trios — ZSH Theme
 
 <p align="center">
   <img src="preview.png" alt="trios theme preview" width="700"/>
@@ -17,16 +17,16 @@ A minimal cyberpunk shell prompt. Clean two-segment layout — username and path
 ## Design
 
 ```
-⬡ tanjib  ⬡  ~/Documents/trios_rust/trios_terminal_rust >>_ cd ..
+⬡ username  ⬡  ~/Documents/trios/trios_terminal >>_ cd ..
 cd ..
-⬡ tanjib  ⬡  ~/Documents/trios_rust >>_ cd ..
+⬡ username  ⬡  ~/Documents/trios >>_ cd ..
 cd ..
-⬡ tanjib  ⬡  ~/Documents >>_ cd..
+⬡ username  ⬡  ~/Documents >>_ cd..
 cd..
 /bin/bash: line 1: cd..: command not found
-⬡ tanjib  ⬡  ~/Documents >>_ cd ..
+⬡ username  ⬡  ~/Documents >>_ cd ..
 cd ..
-⬡ tanjib  ⬡  ~ >>_ ls
+⬡ username  ⬡  ~ >>_ ls
 ls
 10.48.141.132.gnmap
 10.48.141.132.nmap
